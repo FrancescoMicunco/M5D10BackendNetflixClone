@@ -11,26 +11,65 @@ import multer from 'multer'
 
 const mediaRouter = express.Router()
 
+
+// =================  GET ==============
+// =====================================
+
 mediaRouter.get("/", async(req, res, next) => {
+        try {
+            const mediaGet = await getMedia()
+            res.send(mediaGet)
+        } catch (error) {
+            next(error)
+        }
+
+    })
+    // =================  GET + ID ==============
+    // ==========================================
+
+mediaRouter.get("/:id", async(req, res, next) => {
     try {
         const mediaGet = await getMedia()
-        res.send(mediaGet)
+        const index = mediaGet.find(p => p._id === req.params.id)
+        if (index) {
+            res.send(mediaGet)
+        } else {
+            next(createHttpError(404, 'Not found!'))
+        }
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+// =================  POST ==============
+// =====================================
+
+
+mediaRouter.post("/", async(req, res, next) => {
+    try {
+        const mediaGet = await getMedia()
+        const { Title, Year, Type, Poster } = req.body
+
+        const newMedia = {
+            "id": uniqid(),
+            ...req.body,
+            "createdAt": new Date()
+        }
+        mediaGet.push(newMedia)
+        await writeMedia(mediaGet)
+        res.status(201).send({
+            id: newMedia._id
+        })
     } catch (error) {
         next(error)
     }
 
+
 })
 
-
-mediaRouter.get("/:id", (req, res, next) => {
-
-    res.send("it works 2")
-})
-
-mediaRouter.post("/", (req, res, next) => {
-    res.send("it works 3")
-})
-
+// =================  PUT ==============
+// =====================================
 
 mediaRouter.put("/:id", (req, res, next) => {
     res.send("it works")
@@ -52,6 +91,9 @@ mediaRouter.delete("/:id/reviews", (req, res, next) => {
     res.send("it works 7")
 })
 
+
+// =================  GET + ID + pdf ==============
+// ==========================================
 
 mediaRouter.get("/:id/pdf", (req, res, next) => {
     res.send("it works 8")
