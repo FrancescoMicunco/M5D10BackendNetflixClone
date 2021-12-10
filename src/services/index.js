@@ -20,7 +20,7 @@ const mediaRouter = express.Router()
 mediaRouter.get("/", async(req, res, next) => {
         try {
             const reviewsGet = await getMedia()
-            res.send(mediaGet)
+            res.send(reviewsGet)
         } catch (error) {
             next(error)
         }
@@ -32,9 +32,9 @@ mediaRouter.get("/", async(req, res, next) => {
 mediaRouter.get("/:id", async(req, res, next) => {
     try {
         const mediaGet = await getMedia()
-        const index = mediaGet.find(p => p._id === req.params.id)
-        if (index) {
-            res.send(mediaGet)
+        const index = mediaGet.findIndex(p => p.id === req.params.id)
+        if (index !== -1) {
+            res.send(mediaGet[index])
         } else {
             next(createHttpError(404, 'Not found!'))
         }
