@@ -90,8 +90,15 @@ mediaRouter.put("/:id", async(req, res, next) => {
 
 // =================  DELETE ==============
 // =====================================
-mediaRouter.delete("/:id", (req, res, next) => {
-    res.send("it works 4")
+mediaRouter.delete("/:id", async(req, res, next) => {
+    try {
+        const mediaGet = await getMedia()
+        const indexDeletingMedia = mediaGet.filter(e => e.id !== req.params.id)
+        await writeMedia(indexDeletingMedia)
+        res.status(204).send()
+    } catch (error) {
+        next(error)
+    }
 })
 
 
