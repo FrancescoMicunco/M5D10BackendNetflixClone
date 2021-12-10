@@ -1,9 +1,11 @@
 import express from 'express'
 import uniqid from "uniqid"
 import createHttpError from "http-errors"
-// import { postValidation } from '../../lib/validation.js'
-// import { validationResult } from 'express-validator'
+import { postValidation } from '../library/validation.js'
+import { validationResult } from 'express-validator'
 import { getMedia, writeMedia } from '../library/functions.js'
+import { getReviews, writeReviews } from '../library/functions.js'
+
 // import { CloudinaryStorage } from 'multer-storage-cloudinary'
 // import { v2 as cloudinary } from 'cloudinary'
 import multer from 'multer'
@@ -20,7 +22,7 @@ const mediaRouter = express.Router()
 
 mediaRouter.get("/", async(req, res, next) => {
         try {
-            const mediaGet = await getMedia()
+            const reviewsGet = await getMedia()
             res.send(mediaGet)
         } catch (error) {
             next(error)
@@ -136,8 +138,31 @@ mediaRouter.post("/:id/poster", upload.single('poster'), uploadFile, async(req, 
 
 // =================  POST + ID + REVIEWS ==============
 // =====================================
-mediaRouter.post("/:id/reviews", (req, res, next) => {
-    res.send("it works 6")
+mediaRouter.post("/:id/reviews", postValidation, async(req, res, next) => {
+
+    try {
+        const reviewsGet = await getReviews()
+            //const errors = validationResult(req);
+            // if (!errors.isEmpty()) {
+            //     return res.status(400).json({
+            //         errors: errors.array()
+            //     });
+            // } else {
+        const { comment, rate } = req.body
+        const newReview = {
+            "id": req.params.id,
+            ...req.body,
+            "createdAt": new Date()
+        }
+        reviewsGet.push(newReview)
+        await writeReviews(reviewsGet)
+        res.status(201).send({
+                id: newReview.id
+            })
+            //}
+    } catch (error) {
+        next(error)
+    }
 })
 
 mediaRouter.delete("/:id/reviews", (req, res, next) => {
