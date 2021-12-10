@@ -35,8 +35,9 @@ const corsOption = {
         }
     }
 }
-server.use(express.json())
 server.use(cors(corsOption))
+server.use(express.json())
+
 
 // ==========  END POINT ===========
 // ================================
@@ -51,5 +52,5 @@ server.use(unauthorized)
 server.use(notFound)
 server.use(genericErr)
 
-console.table(listendpoints)
+console.table(listendpoints(server))
 server.listen(port, () => { console.log(`server is running on ${port}`) })

@@ -16,13 +16,14 @@ mediaRouter.get("/", async(req, res, next) => {
         const mediaGet = await getMedia()
         res.send(mediaGet)
     } catch (error) {
-        console.log("gerenal error")
+        next(error)
     }
-    next(error)
+
 })
 
 
 mediaRouter.get("/:id", (req, res, next) => {
+
     res.send("it works 2")
 })
 

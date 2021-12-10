@@ -11,7 +11,7 @@ const mediaPath = join(dirname(fileURLToPath(
     import.meta.url)), "../data");
 console.log(mediaPath)
 
-const mediaPathJSON = join(mediaPath, "postsDB.json");
+const mediaPathJSON = join(mediaPath, "media.json");
 
 export const getMedia = () => readJSON(mediaPathJSON);
 
@@ -24,7 +24,7 @@ const reviewsPath = join(dirname(fileURLToPath(
     import.meta.url)), "../data");
 console.log(reviewsPath)
 
-const reviewsPathJSON = join(reviewsPath, "postsDB.json");
+const reviewsPathJSON = join(reviewsPath, "reviews.json");
 
 export const getReviews = () => readJSON(reviewsPathJSON);
 
