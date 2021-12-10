@@ -4,6 +4,7 @@ import express from 'express'
 const mediaRouter = express.Router()
 
 mediaRouter.get("/", (req, res, next) => {
+
     res.send("it works")
 })
 
