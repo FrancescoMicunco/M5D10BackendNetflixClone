@@ -7,7 +7,10 @@ import { getMedia, writeMedia } from '../library/functions.js'
 // import { CloudinaryStorage } from 'multer-storage-cloudinary'
 // import { v2 as cloudinary } from 'cloudinary'
 import multer from 'multer'
-
+import {
+    upload,
+    uploadFile
+} from '../library/upload.js'
 
 const mediaRouter = express.Router()
 
@@ -104,11 +107,35 @@ mediaRouter.delete("/:id", async(req, res, next) => {
 
 // =================  POST + ID + POSTER ==============
 // =====================================
-mediaRouter.post("/:id/poster", (req, res, next) => {
-        res.send("it works 5")
-    })
-    // =================  POST + ID + REVIEWS ==============
-    // =====================================
+mediaRouter.post("/:id/poster", upload.single('poster'), uploadFile, async(req, res, next) => {
+    try {
+        const mediaGet = await getMedia()
+        const findIndex = mediaGet.findIndex(e => e.id === req.params.id)
+        console.log("THIS IS THE searched user", findIndex)
+        if (findIndex !== -1) {
+            const searched = mediaGet[findIndex]
+            const changedMediaPoster = {
+                ...searched,
+                poster: req.file,
+                updatedAt: new Date(),
+                id: req.params.id
+            }
+            mediaGet[findIndex] = changedMediaPoster
+            await writeMedia(mediaGet)
+            res.send("Done!")
+        } else {
+            res.status(404).send({
+                message: `Media not found!`
+            });
+        }
+    } catch (error) {
+        res.status(500).send("General error")
+    }
+    next(error)
+})
+
+// =================  POST + ID + REVIEWS ==============
+// =====================================
 mediaRouter.post("/:id/reviews", (req, res, next) => {
     res.send("it works 6")
 })
