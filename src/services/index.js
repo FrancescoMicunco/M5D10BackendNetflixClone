@@ -71,18 +71,37 @@ mediaRouter.post("/", async(req, res, next) => {
 // =================  PUT ==============
 // =====================================
 
-mediaRouter.put("/:id", (req, res, next) => {
-    res.send("it works")
+mediaRouter.put("/:id", async(req, res, next) => {
+    try {
+        const mediaGet = await getMedia()
+        const findIndex = mediaGet.findIndex(e => e.id === req.params.id)
+        console.log(findIndex)
+        mediaGet[findIndex] = {
+            ...mediaGet[findIndex],
+            ...req.body,
+            updatedAt: new Date()
+        }
+        await writeMedia(mediaGet)
+        res.send("Post updated!")
+    } catch (error) {
+        next(error)
+    }
 })
 
+// =================  DELETE ==============
+// =====================================
 mediaRouter.delete("/:id", (req, res, next) => {
     res.send("it works 4")
 })
 
-mediaRouter.post("/:id/poster", (req, res, next) => {
-    res.send("it works 5")
-})
 
+// =================  POST + ID + POSTER ==============
+// =====================================
+mediaRouter.post("/:id/poster", (req, res, next) => {
+        res.send("it works 5")
+    })
+    // =================  POST + ID + REVIEWS ==============
+    // =====================================
 mediaRouter.post("/:id/reviews", (req, res, next) => {
     res.send("it works 6")
 })
