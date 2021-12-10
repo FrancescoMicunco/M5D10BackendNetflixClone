@@ -138,6 +138,7 @@ mediaRouter.post("/:id/poster", upload.single('poster'), uploadFile, async(req, 
 mediaRouter.post("/:id/reviews", postValidation, async(req, res, next) => {
 
     try {
+        const mediaGet = await getMedia()
         const reviewsGet = await getReviews()
             //const errors = validationResult(req);
             // if (!errors.isEmpty()) {
@@ -153,6 +154,7 @@ mediaRouter.post("/:id/reviews", postValidation, async(req, res, next) => {
         }
         reviewsGet.push(newReview)
         await writeReviews(reviewsGet)
+
         res.status(201).send({
                 id: newReview.id
             })

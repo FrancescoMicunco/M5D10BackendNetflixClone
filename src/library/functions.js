@@ -24,7 +24,7 @@ const reviewsPath = join(dirname(fileURLToPath(
     import.meta.url)), "../data");
 console.log(reviewsPath)
 
-const reviewsPathJSON = join(reviewsPath, "reviews.json");
+const reviewsPathJSON = join(reviewsPath, "media.json");
 
 export const getReviews = () => readJSON(reviewsPathJSON);
 
