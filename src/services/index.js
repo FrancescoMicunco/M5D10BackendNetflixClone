@@ -1,11 +1,24 @@
 import express from 'express'
+import uniqid from "uniqid"
+import createHttpError from "http-errors"
+// import { postValidation } from '../../lib/validation.js'
+// import { validationResult } from 'express-validator'
+import { getMedia, writeMedia } from '../library/functions.js'
+// import { CloudinaryStorage } from 'multer-storage-cloudinary'
+// import { v2 as cloudinary } from 'cloudinary'
+import multer from 'multer'
 
 
 const mediaRouter = express.Router()
 
-mediaRouter.get("/", (req, res, next) => {
-
-    res.send("it works")
+mediaRouter.get("/", async(req, res, next) => {
+    try {
+        const mediaGet = await getMedia()
+        res.send(mediaGet)
+    } catch (error) {
+        console.log("gerenal error")
+    }
+    next(error)
 })
 
 
