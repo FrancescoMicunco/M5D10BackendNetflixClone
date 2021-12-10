@@ -5,14 +5,11 @@ import { postValidation } from '../library/validation.js'
 import { validationResult } from 'express-validator'
 import { getMedia, writeMedia } from '../library/functions.js'
 import { getReviews, writeReviews } from '../library/functions.js'
-
+import { getReadble } from '../library/pdfDownloader.js'
 // import { CloudinaryStorage } from 'multer-storage-cloudinary'
 // import { v2 as cloudinary } from 'cloudinary'
 import multer from 'multer'
-import {
-    upload,
-    uploadFile
-} from '../library/upload.js'
+import { upload, uploadFile } from '../library/upload.js'
 
 const mediaRouter = express.Router()
 
@@ -173,8 +170,21 @@ mediaRouter.delete("/:id/reviews", (req, res, next) => {
 // =================  GET + ID + pdf ==============
 // ==========================================
 
-mediaRouter.get("/:id/pdf", (req, res, next) => {
-    res.send("it works 8")
+mediaRouter.get("/:id/pdf", async(req, res, next) => {
+    try {
+        res.setHeader(
+            "Content-Disposition", "attachement; filename=newfile.pdf"
+        )
+        const source = getReadble()
+        const destination = res
+        pipeline(source, destination, err => {
+            if (err) next("it's not ok")
+        })
+    } catch (error) {
+        next("it's not ok")
+    }
+
+
 })
 
 export default mediaRouter
