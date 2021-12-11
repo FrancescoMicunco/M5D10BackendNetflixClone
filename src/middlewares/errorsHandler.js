@@ -1,7 +1,8 @@
 export const badRequest = (err, req, res, next) => {
     if (err.status === 400) {
         res.status(400).send({
-            message: err.message
+            message: err.message,
+            errors: err.errors
         })
     } else {
         next(err)

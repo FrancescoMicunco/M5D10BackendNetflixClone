@@ -10,15 +10,14 @@ import path, {
 import {
     fileURLToPath
 } from "url";
-
+import expressValidator from 'express-validator'
 
 const server = express()
 const port = process.env.PORT || 3001
 
 const publicDir = path.join(dirname(fileURLToPath(
-    import.meta.url)), "../public")
-console.log("this is Public dir", publicDir)
-
+        import.meta.url)), "../public")
+    //server.use(expressValidator())
 server.use(express.static(publicDir))
 
 
